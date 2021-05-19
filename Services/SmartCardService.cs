@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using EstEID.Blazor.Models;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PCSC;
@@ -14,6 +15,7 @@ namespace EstEID.Blazor.Services
 {
     public class SmartCardService : IHostedService, IDisposable
     {
+        private EventService eventService;
         private readonly ILogger<SmartCardService> logger;
         private static readonly IContextFactory SmartCardContextFactory = ContextFactory.Instance;
         private static readonly IMonitorFactory SmartCardMonitorFactory = MonitorFactory.Instance;
@@ -21,7 +23,7 @@ namespace EstEID.Blazor.Services
         private ISCardMonitor monitorContext = SmartCardMonitorFactory.Create(SCardScope.System);
 
 
-        public SmartCardService(ILogger<SmartCardService> logger)
+        public SmartCardService(ILogger<SmartCardService> logger, EventService eventService)
         {
             this.logger = logger;
             /*             ISCardContext cardContext = SmartCardContextFactory.Establish(SCardScope.System);
@@ -36,6 +38,8 @@ namespace EstEID.Blazor.Services
             {
                 logger.LogInformation($"Found reader {readerName}");
             }
+
+            this.eventService = eventService;
         }
 
         public void Dispose()
@@ -112,7 +116,16 @@ namespace EstEID.Blazor.Services
                         }
                     }
                 }
+
             }
+
+            PersonData personData = new PersonData
+            {
+                IdCode = records[6],
+                FirstName = records[1],
+                LastName = records[0]
+            };
+            eventService.CallUiUpdate(personData);
         }
 
         private void OnCardInitialized(object sender, CardStatusEventArgs e)

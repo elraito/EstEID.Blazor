@@ -1,7 +1,32 @@
 @page "/"
+@using EstEID.Blazor.Services
+@using EstEID.Blazor.Models
+@inject EventService EventService
 
-<h1>Hello, world!</h1>
+@if (personData != null)
+{
+    <div>
+        @personData.IdCode
+        <br>
+        @personData.FirstName
+        <br>
+        @personData.LastName
+    </div>
+}
+else {
+    <div>Waiting</div>
+}
 
-Welcome to your new app.
+@code {
+    private PersonData personData;
+    protected override void OnInitialized()
+    {
+        EventService.UiUpdater += UpdateUI;
+    }
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    private void UpdateUI(object sender, PersonData e)
+    {
+        personData = e;
+        InvokeAsync(() => StateHasChanged());
+    }
+}    

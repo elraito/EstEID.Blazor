@@ -23,6 +23,7 @@ namespace EstEID.Blazor
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddHostedService<SmartCardService>();
+            services.AddSingleton<EventService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
