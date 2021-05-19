@@ -15,4 +15,5 @@ When additional business logic is added the use cases could be:
 3) Keeping account of employees present in a company.
 4) ...
 
-There are no error check whatsoever.
+There are no error checks whatsoever as its a simple demo.
+Feel free to copy paste anything from here without credit attribution.
